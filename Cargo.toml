@@ -1,5 +1,5 @@
 [package]
-name = "raspberry-pi-rust"
+name = "raspi-rust"
 version = "0.1.0"
 authors = ["takayuki tanaka <takayuki.1981.0317@gmail.com>"]
 edition = "2018"

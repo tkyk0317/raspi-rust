@@ -51,8 +51,8 @@ pub extern "C" fn __start_kernel() {
     }
 }
 
-#[cfg(test)]
 #[lang = "eh_personality"]
+#[no_mangle]
 extern "C" fn eh_personality() {}
 
 #[allow(non_snake_case)]
@@ -64,9 +64,13 @@ pub extern "C" fn _Unwind_Resume() {
 // テストを実行できるようになったが、assertの結果が表示されない。。。
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {
-    Uart::get_instance().send(b"test start\n");
+    Uart::get_instance().send(b"test is runing ");
+    Uart::get_instance().send_hex(tests.len() as u32);
+    Uart::get_instance().send(b" tests\n");
+
     for test in tests {
         test();
     }
-    Uart::get_instance().send(b"all test complete\n");
+
+    Uart::get_instance().send(b"test is complete");
 }

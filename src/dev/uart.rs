@@ -1,6 +1,8 @@
 use crate::dev::regs;
 use alloc::boxed::Box;
 use alloc::vec::Vec;
+use alloc::format;
+use core::fmt::{Write, Result, Arguments};
 
 // UART MIS
 const UART_MIS_RXMIS: u32 = 1 << 4; // RXマスク
@@ -17,6 +19,30 @@ pub struct Uart<'a> {
 }
 static mut UART: Uart = Uart { observer: None };
 //static mut UART: Uart = Uart { observer: Vec::new() };
+
+impl<'a> Write for Uart<'a> {
+    fn write_str(&mut self, s: &str) -> Result {
+        self.send(b"called write_str\n");
+        s.bytes().into_iter().for_each(|c| self.send_char(&c));
+        Ok(())
+    }
+}
+
+pub fn _print(args: Arguments) {
+    Uart::get_instance().write_fmt(args);
+}
+
+#[macro_export]
+macro_rules! print {
+    //($($arg:tt)*) => ($crate::dev::uart::_print(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::dev::uart::Uart::get_instance()._print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    ($fmt:expr) => ($crate::print!(concat!($fmt, "\n")));
+    ($fmt:expr, $($arg:tt)*) => (print!(concat!($fmt, "\n"), $($arg)*));
+}
 
 impl<'a> Uart<'a> {
     //  インスタンス取得
@@ -118,8 +144,17 @@ impl<'a> Uart<'a> {
         let hexdigits = b"0123456789ABCDEF";
         let mut i = 28;
         while i >= 0 {
-            self.send_char(&hexdigits[(num >> i) as usize]);
+            let index = (num >> i) as usize & 0xF;
+            if 0 != index {
+                self.send_char(&hexdigits[index]);
+            }
             i -= 4;
         }
     }
+
+    pub fn _print(&mut self, args:Arguments) {
+        self.write_fmt(args).unwrap();
+    }
 }
+
+
