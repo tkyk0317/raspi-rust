@@ -1,4 +1,4 @@
-.PHONY: build clean dbuild
+.PHONY: build clean run test
 build:
 	@ docker build . -t raspi-rust
 
@@ -10,6 +10,3 @@ clean:
 
 run: build
 	@ docker run -t raspi-rust cargo r
-
-asm:
-	@ aarch64-linux-gnu-objdump -S target/aarch64-unknown-linux-gnu/debug/raspberry-pi-rust
