@@ -1,7 +1,7 @@
 // kernel内で使用するアロケーター
 use crate::dev::uart::Uart;
-use core::ptr;
 use core::alloc::{GlobalAlloc, Layout};
+use core::ptr;
 
 // リンカースクリプトで定義したHeap
 extern "C" {

@@ -1,4 +1,7 @@
-use crate::{println, dev::uart::{Uart, UartObserver}};
+use crate::{
+    dev::uart::{Uart, UartObserver},
+    println,
+};
 
 const BUF_SIZE: usize = 256;
 
@@ -28,7 +31,9 @@ impl Shell {
         Uart::get_instance().send(b"==============================\n");
 
         loop {
-            unsafe { llvm_asm!("wfi"); }
+            unsafe {
+                llvm_asm!("wfi");
+            }
         }
     }
 }

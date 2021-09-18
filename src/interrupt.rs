@@ -19,7 +19,10 @@ unsafe fn timer_freq() {
     let mut freq = 0;
     llvm_asm!("mrs $0, cntfrq_el0" :"=r"(freq) ::: "volatile");
     llvm_asm!("msr cntv_tval_el0, $0" :: "r" (freq / 10000) :: "volatile");
-    regs::write(regs::Register::Core0TimerInterruptCtl, CORE0_TIMER_IRQ_ENABLE);
+    regs::write(
+        regs::Register::Core0TimerInterruptCtl,
+        CORE0_TIMER_IRQ_ENABLE,
+    );
 }
 
 pub fn init() {
@@ -65,7 +68,11 @@ pub extern "C" fn __irq_handler() {
         }
     }
     // Core0 Timer割り込みチェック
-    if CORE0_IRQ_TIMER_INTERRUPT == regs::read(regs::Register::Core0InterruptSource) & CORE0_IRQ_TIMER_INTERRUPT {
-        unsafe { timer_freq(); }
+    if CORE0_IRQ_TIMER_INTERRUPT
+        == regs::read(regs::Register::Core0InterruptSource) & CORE0_IRQ_TIMER_INTERRUPT
+    {
+        unsafe {
+            timer_freq();
+        }
     }
 }

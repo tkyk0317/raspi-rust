@@ -1,8 +1,8 @@
 use crate::dev::regs;
 use alloc::boxed::Box;
-use alloc::vec::Vec;
 use alloc::format;
-use core::fmt::{Write, Result, Arguments};
+use alloc::vec::Vec;
+use core::fmt::{Arguments, Result, Write};
 
 // UART MIS
 const UART_MIS_RXMIS: u32 = 1 << 4; // RXマスク
@@ -152,9 +152,7 @@ impl<'a> Uart<'a> {
         }
     }
 
-    pub fn _print(&mut self, args:Arguments) {
+    pub fn _print(&mut self, args: Arguments) {
         self.write_fmt(args).unwrap();
     }
 }
-
-
