@@ -13,4 +13,6 @@ COPY ./Cargo.lock ./Cargo.lock
 COPY ./build.rs ./build.rs
 COPY ./linker.ld ./linker.ld
 
-RUN cargo b -vv
+RUN --mount=type=cache,target=$HOME/.cargo/registry \
+    --mount=type=cache,target=/usr/src/raspi-rust/target \
+    cargo build -vv
