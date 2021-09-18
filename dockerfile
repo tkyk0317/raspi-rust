@@ -8,7 +8,7 @@ WORKDIR /usr/src/raspi-rust
 
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./Cargo.lock ./Cargo.lock
-COPY ./src/main.rs ./src/main.rs
+RUN mkdir -p ./src && touch ./src/main.rs
 RUN cargo fetch
 
 COPY ./src ./src
