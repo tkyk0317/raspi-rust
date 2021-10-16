@@ -1,12 +1,9 @@
 #FROM rustlang/rust:nightly as builder
-FROM rust:latest
+FROM rust:slim-buster
 
 RUN apt-get update
 RUN apt-get install -y g++-aarch64-linux-gnu \
     qemu-system-aarch64
-
-RUN cargo install cargo-binutils
-RUN rustup component add llvm-tools-preview
 
 WORKDIR /usr/src/raspi-rust
 
@@ -15,6 +12,9 @@ COPY ./Cargo.lock ./Cargo.lock
 COPY ./rust-toolchain ./rust-toolchain
 RUN mkdir -p ./src && touch ./src/main.rs
 RUN cargo fetch
+
+RUN cargo install cargo-binutils
+RUN rustup component add llvm-tools-preview
 
 COPY ./src ./src
 COPY ./.cargo ./.cargo
